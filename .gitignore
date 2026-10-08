@@ -1,0 +1,22 @@
+# python
+__pycache__/
+*.py[cod]
+*$py.class
+venv/
+env/
+.env
+
+# audio data a exporty (kritické pro GitHub)
+*.mp3
+*.wav
+*.flac
+data/input/*
+!data/input/.gitkeep
+data/output/*
+!data/output/.gitkeep
+
+# ide a os
+.vscode/
+.idea/
+.DS_Store
+*.swp

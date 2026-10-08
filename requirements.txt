@@ -1,0 +1,6 @@
+librosa
+numba<0.60.0
+soundfile
+faster-whisper
+numpy<2.0.0
+pandas
