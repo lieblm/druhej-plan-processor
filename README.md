@@ -19,4 +19,4 @@ Automatizovaná pipeline pro bleskovou analýzu, segmentaci a export nahrávek z
 - `threshold = music_peak * 0.15`: Práh, od kterého se hraje (aktuálně 15 % vrcholné hudební hlasitosti). *(Po úpravě je nutné smazat soubor s cache `*.pkl`)*
 - `merge_tolerance_sec=4.0`: Jak dlouhou pauzu/dýchačku bubeníka skript přejde, než stopu rozdělí.
 - `min_duration_sec=45.0`: Skladby kratší než 45 vteřin se vyhodnotí jako ladění a zahodí.
-- `padding_sec=2.0`: Každý blok skript roztáhne na začátku a na konci o 2 vteřiny, aby řez působil lidsky a neustřihl dozvuk činelů.
+- `padding_sec=4.0`: Každý blok skript roztáhne na začátku a na konci o 4 vteřiny, aby řez působil lidsky a neustřihl dozvuk činelů.

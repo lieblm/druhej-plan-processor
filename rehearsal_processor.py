@@ -113,8 +113,8 @@ class RehearsalProcessor:
         
         # Parametry definující chování detektoru:
         # merge_tolerance_sec = 4.0s (překlene pauzy bubeníka)
-        # padding_sec = 2.0s (přidá prostor před a za skladbou pro plynulejší začátky a konce)
-        padding_sec = 2.0
+        # padding_sec = 4.0s (přidá prostor před a za skladbou pro plynulejší začátky a konce)
+        padding_sec = 4.0
         
         music_segments = self.extract_music_segments(
             df_audio, 
