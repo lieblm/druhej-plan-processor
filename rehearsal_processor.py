@@ -128,7 +128,7 @@ class RehearsalProcessor:
             # Rozšíříme bloky o padding, ale zajistíme, že nezačnou v mínusu
             start = max(0.0, s['start'] - padding_sec)
             end = s['end'] + padding_sec
-            labels.append((start, end, "SONG"))
+            labels.append((start, end, "BLOK"))
             
         labels.sort(key=lambda x: x[0])
         
@@ -161,7 +161,7 @@ class RehearsalProcessor:
             label_text = parts[2].strip()
             
             # Ignorujeme nevyplněné výchozí štítky
-            if label_text == "SONG":
+            if label_text == "BLOK":
                 logger.info(f"Přeskakuji nepojmenovaný úsek v čase {start_time:.1f}s.")
                 continue
                 
