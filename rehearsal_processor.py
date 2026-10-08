@@ -138,7 +138,7 @@ class RehearsalProcessor:
                 
         logger.info(f"Label Track vygenerován: {output_txt} (Nalezeno skladeb: {len(music_segments)})")
 
-    def execute_ffmpeg_export(self, labels_txt: str):
+    def execute_ffmpeg_export(self, labels_txt: str, artist_name: str = "Unknown Artist"):
         """Krok 4: Načtení Audacity štítků a dávkový export MP3 (re-encode) s ID3 tagy."""
         logger.info(f"Zahajuji FFmpeg dávkový export podle {labels_txt}...")
         
@@ -187,7 +187,7 @@ class RehearsalProcessor:
                 '-q:a', '2',
                 '-metadata', f'title={title}',
                 '-metadata', f'track={track_num}',
-                '-metadata', 'artist=Druhej plán',
+                '-metadata', f'artist={artist_name}',
                 output_filename
             ]
             
@@ -203,6 +203,7 @@ if __name__ == "__main__":
     parser.add_argument("--outdir", required=True, help="Výstupní adresář")
     parser.add_argument("--mode", choices=['analyze', 'export'], required=True, help="Režim: 'analyze' nebo 'export'")
     parser.add_argument("--labels", help="Cesta k upravenému labels.txt (povinné pro režim 'export')")
+    parser.add_argument("--artist", default="Unknown Artist", help="Název kapely pro ID3 tagy (při exportu)")
     
     args = parser.parse_args()
     processor = RehearsalProcessor(input_file=args.input, output_dir=args.outdir)
@@ -217,4 +218,4 @@ if __name__ == "__main__":
         if not args.labels:
             logger.error("Pro export je nutné specifikovat --labels.")
             exit(1)
-        processor.execute_ffmpeg_export(args.labels)
+        processor.execute_ffmpeg_export(args.labels, artist_name=args.artist)
