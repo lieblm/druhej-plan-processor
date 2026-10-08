@@ -2,6 +2,8 @@
 
 Automatizovaná pipeline pro bleskovou analýzu, segmentaci a export nahrávek ze zkoušek kapely. Skript spolehlivě identifikuje písničky na základě analýzy dynamiky a hlasitosti (RMS), ignoruje mluvení/ladění a připraví štítky pro finální ořez.
 
+> 🎸 **Od muzikantů pro muzikanty:** Tento nástroj jsme si původně vytvořili pro zpracování našich zkoušek v kapele **Druhej plán**. Rozhodli jsme se ho ale uvolnit jako open-source – věříme totiž, že ušetří spoustu otravného stříhání a klikání i dalším muzikantům, aby se mohli soustředit na to podstatné: na muziku.
+
 ## Workflow
 1. vlož 2h záznam do `data/input/`.
 2. spusť analýzu: `python rehearsal_processor.py --input data/input/zkouska.mp3 --outdir data/output --mode analyze`
