@@ -1,9 +1,9 @@
-# AGENT DIRECTIVES & SYSTEM CONTEXT (GEMINI.MD) - Base Template
+# AGENT DIRECTIVES & SYSTEM CONTEXT (GEMINI.MD)
 
 CRITICAL: Read this FIRST at the start of EVERY session.
 
 ## 1. SESSION START PROTOCOL
-When user instructs to start a session or read copilot instructions, IMMEDIATELY:
+When user instructs to start a session or read instructions, IMMEDIATELY:
 1. Search and read essential project documentation (e.g., README.md, architecture docs).
 2. Confirm understanding of the current project state.
 3. Ask for the task assignment and wait for user input.
