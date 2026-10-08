@@ -6,9 +6,10 @@ Automatizovaná pipeline pro bleskovou analýzu, segmentaci a export nahrávek z
 1. vlož 2h záznam do `data/input/`.
 2. spusť analýzu: `python rehearsal_processor.py --input data/input/zkouska.mp3 --outdir data/output --mode analyze`
    - *Poznámka: Analýza celého 2h souboru trvá jen několik vteřin (bez použití Whisper STT). Data se ukládají do cache pro instantní opakované ladění.*
-3. zkontroluj vygenerované štítky `data/output/labels.txt` (označené jako "SONG") v Audacity.
-4. na základě štítků vytvoř soubor `index.csv` pro finální export (formát s hlavičkou: `number,title,start,duration`).
-5. spusť export: `python rehearsal_processor.py --input data/input/zkouska.mp3 --outdir data/output --mode export --csv data/output/index.csv`
+3. zkontroluj vygenerované štítky `data/output/labels.txt` v Audacity.
+4. uprav si začátky a konce, přejmenuj štítky "SONG" na názvy skladeb (např. "01 Heartbreaker") a ulož upravené štítky (např. jako `final_labels.txt`).
+   - *Poznámka: Neupravené štítky ponechané s názvem "SONG" se při exportu přeskočí, takže pokud chceš nějaký úsek ignorovat, prostě ho nepřejmenovávej.*
+5. spusť export přímo z upravených štítků: `python rehearsal_processor.py --input data/input/zkouska.mp3 --outdir data/output --mode export --labels data/output/final_labels.txt`
 
 ## Ladění detekce (v `rehearsal_processor.py`)
 - `threshold = music_peak * 0.15`: Práh, od kterého se hraje (aktuálně 15 % vrcholné hudební hlasitosti). *(Po úpravě je nutné smazat soubor s cache `*.pkl`)*

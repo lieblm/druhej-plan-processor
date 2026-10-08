@@ -9,6 +9,7 @@ import logging
 import os
 import subprocess
 import pickle
+import re
 import numpy as np
 import librosa
 import pandas as pd
@@ -137,21 +138,43 @@ class RehearsalProcessor:
                 
         logger.info(f"Label Track vygenerován: {output_txt} (Nalezeno skladeb: {len(music_segments)})")
 
-    def execute_ffmpeg_export(self, index_csv: str):
-        """Krok 4: Načtení index.csv a dávkový export MP3 (re-encode) s ID3 tagy."""
-        logger.info(f"Zahajuji FFmpeg dávkový export podle {index_csv}...")
+    def execute_ffmpeg_export(self, labels_txt: str):
+        """Krok 4: Načtení Audacity štítků a dávkový export MP3 (re-encode) s ID3 tagy."""
+        logger.info(f"Zahajuji FFmpeg dávkový export podle {labels_txt}...")
         
-        if not os.path.exists(index_csv):
-            logger.error(f"Soubor {index_csv} nebyl nalezen. Export přerušen.")
+        if not os.path.exists(labels_txt):
+            logger.error(f"Soubor {labels_txt} nebyl nalezen. Export přerušen.")
             return
 
-        df_index = pd.read_csv(index_csv)
-        
-        for idx, row in df_index.iterrows():
-            track_num = str(row['number']).zfill(2)
-            title = row['title']
-            start_time = row['start']
-            duration = row['duration']
+        with open(labels_txt, 'r', encoding='utf-8') as f:
+            lines = f.readlines()
+            
+        track_counter = 1
+        for line in lines:
+            parts = line.strip().split('\t')
+            if len(parts) < 3:
+                continue
+                
+            start_time = float(parts[0])
+            end_time = float(parts[1])
+            duration = end_time - start_time
+            label_text = parts[2].strip()
+            
+            # Ignorujeme nevyplněné výchozí štítky
+            if label_text == "SONG":
+                logger.info(f"Přeskakuji nepojmenovaný úsek v čase {start_time:.1f}s.")
+                continue
+                
+            # Detekce čísla v názvu (např. "01 Heartbreaker" -> "01", "Heartbreaker")
+            match = re.match(r'^(\d+)[\s\-\._]*(.+)$', label_text)
+            if match:
+                track_num = str(match.group(1)).zfill(2)
+                title = match.group(2).strip()
+            else:
+                track_num = str(track_counter).zfill(2)
+                title = label_text
+                
+            track_counter += 1
             
             output_filename = os.path.join(self.output_dir, f"{track_num} {title}.mp3")
             
@@ -179,7 +202,7 @@ if __name__ == "__main__":
     parser.add_argument("--input", required=True, help="Cesta k MP3 souboru ze zkoušky")
     parser.add_argument("--outdir", required=True, help="Výstupní adresář")
     parser.add_argument("--mode", choices=['analyze', 'export'], required=True, help="Režim: 'analyze' nebo 'export'")
-    parser.add_argument("--csv", help="Cesta k index.csv (povinné pro režim 'export')")
+    parser.add_argument("--labels", help="Cesta k upravenému labels.txt (povinné pro režim 'export')")
     
     args = parser.parse_args()
     processor = RehearsalProcessor(input_file=args.input, output_dir=args.outdir)
@@ -191,7 +214,7 @@ if __name__ == "__main__":
         logger.info("Analýza ukončena z lokální cache za zlomek vteřiny.")
         
     elif args.mode == 'export':
-        if not args.csv:
-            logger.error("Pro export je nutné specifikovat --csv.")
+        if not args.labels:
+            logger.error("Pro export je nutné specifikovat --labels.")
             exit(1)
-        processor.execute_ffmpeg_export(args.csv)
+        processor.execute_ffmpeg_export(args.labels)
