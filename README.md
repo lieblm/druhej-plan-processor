@@ -4,16 +4,22 @@ Automatizovaná pipeline pro bleskovou analýzu, segmentaci a export nahrávek z
 
 > 🎸 **Od muzikantů pro muzikanty:** Tento nástroj jsme si původně vytvořili pro zpracování našich zkoušek v kapele **Druhej plán**. Rozhodli jsme se ho ale uvolnit jako open-source – věříme totiž, že ušetří spoustu otravného stříhání a klikání i dalším muzikantům, aby se mohli soustředit na to podstatné: na muziku.
 
+## Požadavky a prerekvizity
+- **Python 3.9+** (skript nepodporuje Python 2)
+- **FFmpeg** (nainstalovaný v systému a dostupný v PATH pro export skladeb do MP3)
+- **Virtuální prostředí**: Pro instalaci závislostí spusťte inicializační skript `./init_env.sh` (nebo manuálně `python3 -m venv venv && source venv/bin/activate && pip install -r requirements.txt`).
+
 ## Workflow
-1. vlož záznam ze zkoušky do `data/input/`.
-2. spusť analýzu: `python rehearsal_processor.py --input data/input/zkouska.mp3 --outdir data/output --mode analyze`
+1. aktivuj virtuální prostředí: `source venv/bin/activate` (nebo použij přímo `python3`)
+2. vlož záznam ze zkoušky do `data/input/` (podporovány jsou formáty jako `.mp3`, `.m4a`, `.wav` apod.).
+3. spusť analýzu: `python3 rehearsal_processor.py --input data/input/zkouska.mp3 --outdir data/output --mode analyze`
    - *Poznámka: Analýza celého souboru trvá jen několik vteřin. Data se ukládají do cache pro instantní opakované ladění.*
-3. zkontroluj vygenerované štítky `data/output/labels.txt` v Audacity.
-4. v Audacity si vizuálně posuň a uprav hrany bloků. U skladeb, které chceš exportovat, přepiš výchozí štítek "BLOK" alespoň na rychlý pracovní název (např. "a", "x" nebo hrubý název). Ty úseky, které chceš zahodit (ladění, pauzy), ponech s původním textem "BLOK" nebo je smaž. Následně štítky vyexportuj (`Soubor -> Export Other -> Export Labels...`) např. jako `final_labels.txt`.
-5. otevři `final_labels.txt` v běžném textovém editoru (např. VS Code, Poznámkový blok) a v klidu dočisti pracovní názvy do finální podoby (např. "01 Heartbreaker").
+4. zkontroluj vygenerované štítky `data/output/labels.txt` v Audacity.
+5. v Audacity si vizuálně posuň a uprav hrany bloků. U skladeb, které chceš exportovat, přepiš výchozí štítek "BLOK" alespoň na rychlý pracovní název (např. "a", "x" nebo hrubý název). Ty úseky, které chceš zahodit (ladění, pauzy), ponech s původním textem "BLOK" nebo je smaž. Následně štítky vyexportuj (`Soubor -> Export Other -> Export Labels...`) např. jako `final_labels.txt`.
+6. otevři `final_labels.txt` v běžném textovém editoru (např. VS Code, Poznámkový blok) a v klidu dočisti pracovní názvy do finální podoby (např. "01 Heartbreaker").
    - *Tip z praxe: Psát detailní text štítků přímo v Audacity je frustrující, protože program odchytává některé klávesy (např. čísla) jako své zkratky. Proto je v Audacity lepší dát jen rychlý pracovní název a čisté pojmenování (i s číslováním) udělat až v textovém editoru.*
    - *Poznámka: Štítky ponechané s výchozím názvem "BLOK" se při exportu automaticky přeskočí a zahodí.*
-6. spusť export: `python rehearsal_processor.py --input data/input/zkouska.mp3 --outdir data/output --mode export --labels data/output/final_labels.txt --artist "Název Mojí Kapely"`
+7. spusť export: `python3 rehearsal_processor.py --input data/input/zkouska.mp3 --outdir data/output --mode export --labels data/output/final_labels.txt --artist "Název Mojí Kapely"`
 
 ## Ladění detekce (v `rehearsal_processor.py`)
 - `threshold = music_peak * 0.15`: Práh, od kterého se hraje (aktuálně 15 % vrcholné hudební hlasitosti). *(Po úpravě je nutné smazat soubor s cache `*.pkl`)*

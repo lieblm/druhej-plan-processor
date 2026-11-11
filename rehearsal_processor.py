@@ -1,3 +1,4 @@
+#!/usr/bin/env python3
 """
 G2.5 Rehearsal Audio Processor (v3.5)
 Autor: Architekt a programátor (quant systems)
